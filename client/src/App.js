@@ -7,6 +7,7 @@ import { useState } from "react";
 import Navbar from "./Components/Navbar.jsx";
 import Workouts from "./pages/Workouts.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import { useSelector } from "react-redux";
 
 
 const Container = styled.div`
@@ -21,20 +22,17 @@ overflow-y:hidden;
 transition: all 0.2s ease;
 `;
 
-
-
-
 function App() {
 
-  const [user, setUser] = useState(true);
+  const { currentUser } = useSelector((state) => state.user)
 
 
   return (
     <ThemeProvider theme={lightTheme}>
 
       <BrowserRouter>
-        {user ? (<Container>
-          <Navbar />
+        {currentUser ? (<Container>
+          <Navbar currentUser={currentUser} />
           <Routes>
             <Route path="/" exact element={<Dashboard />} />
             <Route path="/Workouts" exact element={<Workouts />} />

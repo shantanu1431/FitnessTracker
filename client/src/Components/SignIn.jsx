@@ -1,49 +1,99 @@
-import React from 'react'
-import {styled} from "styled-components";
+import React, { useState } from "react";
+import { styled } from "styled-components";
 import TextInput from "./TextInput";
 import Button from "./Button";
+import { UserSignIn } from "../api";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../redux/reducers/userSlice";
 
 const Container = styled.div`
-width: 100%;
-max-width: 500px;
-display: flex;
-flex-direction: column;
-gap: 36px;
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
 `;
 const Title = styled.div`
   font-size: 30px;
   font-weight: 800;
   color: ${({ theme }) => theme.text_primary};
-  `;
+`;
 
-  const Span  = styled.div`
-    font-size: 16px;
-    font-weight: 400;
-    color: ${({ theme }) => theme.text_secondary};
-  `;
+const Span = styled.div`
+  font-size: 16px;
+  font-weight: 400;
+  color: ${({ theme }) => theme.text_secondary};
+`;
 
 const SignIn = () => {
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
+  const validateInputs = () => {
+    if (!email || !password) {
+      alert("Please fill in all fields");
+      return false;
+    }
+    return true;
+  };
+
+  const handleSignIn = async () => {
+    setLoading(true);
+    setButtonDisabled(true);
+    if (validateInputs()) {
+      await UserSignIn({ email, password })
+        .then((res) => {
+          dispatch(loginSuccess(res.data));
+          alert("Login Success");
+          setLoading(false);
+          setButtonDisabled(false);
+        })
+        .catch((err) => {
+          alert(err.response.data.message);
+          setLoading(false);
+          setButtonDisabled(false);
+        });
+    }
+  };
+
   return (
     <Container>
-        <div>
-            <Title>Welcome to Fittrack</Title>
-            <Span>Please login with your details</Span>
-        </div>
-        <div style={{
-            diplay:"flex",
-            gap:"20px",
-            flexDirection: "column",
-        }}>
-            <TextInput 
-            label="Email Addres"
-            placeholder="Enter your Email address" />
-            <TextInput 
-            label="Password"
-            placeholder="Enter your Password" />
-            <Button text="SignIn" />
-        </div>
+      <div>
+        <Title>Welcome to Fittrack</Title>
+        <Span>Please login with your details</Span>
+      </div>
+      <div
+        style={{
+          diplay: "flex",
+          gap: "20px",
+          flexDirection: "column",
+        }}
+      >
+        <TextInput
+          label="Email Address"
+          placeholder="Enter your Email address"
+          value={email}
+          handelChange={(e) => setEmail(e.target.value)}
+        />
+        <TextInput
+          label="Password"
+          placeholder="Enter your Password"
+          password
+          value={password}
+          handelChange={(e) => setPassword(e.target.value)}
+        />
+        <Button
+          text="SignIn"
+          onClick={handleSignIn}
+          isLoading={loading}
+          isDisabled={buttonDisabled}
+        />
+      </div>
     </Container>
-  )
-}
+  );
+};
 
 export default SignIn;

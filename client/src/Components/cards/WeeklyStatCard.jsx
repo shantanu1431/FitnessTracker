@@ -25,7 +25,7 @@ const Title = styled.div`
     }    
 `;
 
-const WeeklyStat = ({data}) => {
+const WeeklyStatCard = ({data}) => {
 
     
   return (
@@ -37,10 +37,11 @@ const WeeklyStat = ({data}) => {
             
             series={[{data: data?.totalWeeksCaloriesBurnt?.caloriesBurnt?.caloriesBurned}]}
             height={300}
+            dataset={data}
             />
       )}
     </Card>
   );
 };
 
-export default WeeklyStat;
+export default WeeklyStatCard;

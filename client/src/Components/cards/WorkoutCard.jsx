@@ -51,20 +51,22 @@ const Details = styled.div`
   gap: 6px;
 `;
 
-const WorkoutCard = () => {
+const WorkoutCard = ({ workout }) => {
   return (
     <Card>
-      <Category>#Legs</Category>
-      <Name>Back squat</Name>
-      <Sets>Counnt: 5sets X 10reps</Sets>
+      <Category>#{workout?.Category}</Category>
+      <Name>{workout?.workoutName}</Name>
+      <Sets>
+        {workout?.sets} sets X {workout?.reps} reps
+      </Sets>
       <Flex>
         <Details>
           <FitnessCenterRounded sx={{ fontsize: "20px" }} />
-          30kg
+          {workout?.weight} kg
         </Details>
         <Details>
           <TimelapseRounded sx={{ fontsize: "20px" }} />
-          30kg
+          {workout?.duration} min
         </Details>
       </Flex>
     </Card>
